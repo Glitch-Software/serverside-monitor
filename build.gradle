@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'com.glitchsoftware'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        name = 'JitPack'
+        url = 'https://jitpack.io'
+    }
+}
+
+configurations {
+    shaded
+
+    compile.extendsFrom shaded
+}
+
+dependencies {
+    shaded 'com.google.code.gson:gson:+'
+    shaded 'org.jsoup:jsoup:+'
+    shaded 'com.squareup.okhttp3:okhttp:+'
+    shaded 'com.github.webbit:webbit:v0.4.19'
+
+    implementation 'org.projectlombok:lombok:+'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+}
+
+shadowJar {
+    configurations = [project.configurations.shaded]
+}
+
+build {
+    dependsOn shadowJar
+}

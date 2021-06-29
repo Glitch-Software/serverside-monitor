@@ -1,5 +1,7 @@
 package com.glitchsoftware.monitor.task;
 
+import com.glitchsoftware.monitor.Monitor;
+import com.glitchsoftware.monitor.proxy.CustomProxy;
 import com.glitchsoftware.monitor.task.callback.MonitorCallback;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +38,10 @@ public abstract class Task implements Runnable {
     }
 
     public void rotateProxy() {
-//        final CustomProxy customProxy = AceMonitors.getINSTANCE().getProxyManager().randomProxy();
-//
+        final CustomProxy customProxy = Monitor.INSTANCE.getProxyManager().randomProxy();
+
         final Authenticator proxyAuthenticator = (route, response) -> {
-            final String credential = Credentials.basic("StarBeam", "ScrimFoots");
+            final String credential = Credentials.basic(customProxy.getUsername(), customProxy.getPassword());
 
             return response.request().newBuilder()
                     .header("Proxy-Authorization", credential)
@@ -47,7 +49,7 @@ public abstract class Task implements Runnable {
         };
 
         setHttpClient(new OkHttpClient.Builder()
-                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("104.255.175.236", 32743)))
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(customProxy.getIp(), customProxy.getPort())))
                 .proxyAuthenticator(proxyAuthenticator)
                 .build());
     }

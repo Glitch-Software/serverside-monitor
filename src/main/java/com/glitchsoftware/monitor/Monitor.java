@@ -1,5 +1,6 @@
 package com.glitchsoftware.monitor;
 
+import com.glitchsoftware.monitor.proxy.ProxyManager;
 import com.glitchsoftware.monitor.socket.WebSocketHandler;
 import com.glitchsoftware.monitor.socket.channel.Channel;
 import com.glitchsoftware.monitor.socket.notification.Notification;
@@ -24,6 +25,8 @@ public enum Monitor {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    private final ProxyManager proxyManager = new ProxyManager();
+
     private final List<Channel> connectedChannel = new LinkedList<>();
 
     public void startServer() {
@@ -47,6 +50,10 @@ public enum Monitor {
     public void removeChannel(Channel channel) {
         System.out.println("Removed Channel");
         this.connectedChannel.remove(channel);
+    }
+
+    public ProxyManager getProxyManager() {
+        return proxyManager;
     }
 
     public void sendNotification(Notification notification) {
